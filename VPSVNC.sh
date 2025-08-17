@@ -10,6 +10,15 @@ read -sp "Enter the VNC Password to set: " vnc_password
 echo # Adds a newline for clean formatting
 
 
+# --- Detect the real user running the script ---
+if [ -n "$SUDO_USER" ]; then
+    REAL_USER="$SUDO_USER"
+else
+    REAL_USER=$(whoami)
+fi
+USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6)
+
+
 # --- System Configuration ---
 # Correctly apply VPS code to /etc/hosts
 echo "--- Configuring /etc/hosts... ---"
@@ -26,15 +35,12 @@ EOF
 
 # --- Pre-seed Debconf Selections for Automated Installation ---
 echo "--- Pre-configuring installer settings... ---"
-# 1. Set Keyboard Layout to 'English (US)'
 echo "keyboard-configuration keyboard-configuration/xkb-keymap select us" | sudo debconf-set-selections
-# 2. Set the default display manager to 'lightdm'
 echo "lightdm shared/default_display_manager select lightdm" | sudo debconf-set-selections
 
 
 # --- Package Installation ---
 echo "--- Updating package list and installing software... ---"
-# Ensure the universe repository is enabled for desktop packages
 sudo add-apt-repository universe -y
 sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y \
     xfce4 \
@@ -43,46 +49,46 @@ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y \
     novnc \
     python3-websockify \
     python3-numpy \
-    tightvncserver \
+    tigervnc-standalone-server \
     htop nano neofetch \
     firefox
 
 
-# --- VNC Password and Server Configuration ---
-echo "--- Configuring VNC server automatically... ---"
-# Automatically set the VNC password from user input
-mkdir -p ~/.vnc
-echo -e "${vnc_password}\n${vnc_password}\nn" | vncpasswd
+# --- VNC Password and Server Configuration (Guaranteed Non-Interactive) ---
+echo "--- Configuring VNC server for user '$REAL_USER'... ---"
+sudo -u "$REAL_USER" mkdir -p "$USER_HOME/.vnc"
+# This command directly creates the encrypted password file. It will not ask for input.
+echo "$vnc_password" | sudo -u "$REAL_USER" vncpasswd -f > "$USER_HOME/.vnc/passwd"
+# Set correct permissions for the password file
+sudo -u "$REAL_USER" chmod 600 "$USER_HOME/.vnc/passwd"
 
-# Backup and create new xstartup file to launch XFCE
-[ -f ~/.vnc/xstartup ] && mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
-cat <<EOF > ~/.vnc/xstartup
+# Create the xstartup file to launch XFCE
+sudo -u "$REAL_USER" tee "$USER_HOME/.vnc/xstartup" > /dev/null <<EOF
 #!/bin/bash
 xrdb \$HOME/.Xresources
 startxfce4 &
 EOF
-chmod +x ~/.vnc/xstartup
+sudo -u "$REAL_USER" chmod +x "$USER_HOME/.vnc/xstartup"
 
 
 # --- Generate SSL Certificate for noVNC ---
 echo "--- Generating SSL certificate... ---"
-openssl req -x509 -nodes -newkey rsa:3072 \
-    -keyout ~/novnc.pem -out ~/novnc.pem -days 3650 \
+sudo -u "$REAL_USER" openssl req -x509 -nodes -newkey rsa:3072 \
+    -keyout "$USER_HOME/novnc.pem" -out "$USER_HOME/novnc.pem" -days 3650 \
     -subj "/C=US/ST=None/L=None/O=NoVNC/CN=localhost"
 
 
-# --- Start Services ---
+# --- Start Services (as the correct user) ---
 echo "--- Starting VNC and noVNC services... ---"
-# Start VNC server on display :1
-vncserver :1
+# TigerVNC needs the '-localhost no' flag to be accessible over the network
+sudo -u "$REAL_USER" vncserver :1 -localhost no
 
-# Start noVNC (websockify) in the background
-websockify -D --web=/usr/share/novnc/ --cert=\$HOME/novnc.pem 6080 localhost:5901
+sudo -u "$REAL_USER" websockify -D --web=/usr/share/novnc/ --cert="$USER_HOME/novnc.pem" 6080 localhost:5901
 
 
 # --- Final Output ---
-# Display system info
-neofetch
+# Display system info (run as the user for correct theme/shell info)
+sudo -u "$REAL_USER" neofetch
 
 # Output access info
 echo ""
@@ -92,6 +98,6 @@ echo ""
 echo "   noVNC Link: https://${vpscode}-6080.csb.app/vnc.html"
 echo "   Agent Link: https://agent.blackbox.ai/?sandbox=${vpscode}"
 echo ""
-echo "   Your VNC password has been set."
+echo "   Your VNC password has been set for user '$REAL_USER'."
 echo "📌 VPS code '${vpscode}' has been applied to /etc/hosts."
 echo "========================================================================="
