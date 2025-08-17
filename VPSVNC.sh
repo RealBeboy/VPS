@@ -57,16 +57,15 @@ sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install -y \
 # --- VNC Password and Server Configuration (Guaranteed Non-Interactive) ---
 echo "--- Configuring VNC server for user '$REAL_USER'... ---"
 sudo -u "$REAL_USER" mkdir -p "$USER_HOME/.vnc"
-# This command directly creates the encrypted password file. It will not ask for input.
 echo "$vnc_password" | sudo -u "$REAL_USER" vncpasswd -f > "$USER_HOME/.vnc/passwd"
-# Set correct permissions for the password file
 sudo -u "$REAL_USER" chmod 600 "$USER_HOME/.vnc/passwd"
 
-# Create the xstartup file to launch XFCE
-sudo -u "$REAL_USER" tee "$USER_HOME/.vnc/xstartup" > /dev/null <<EOF
-#!/bin/bash
-xrdb \$HOME/.Xresources
-startxfce4 &
+# Create the more robust xstartup file to launch XFCE
+sudo -u "$REAL_USER" tee "$USER_HOME/.vnc/xstartup" > /dev/null <<'EOF'
+#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+exec startxfce4
 EOF
 sudo -u "$REAL_USER" chmod +x "$USER_HOME/.vnc/xstartup"
 
