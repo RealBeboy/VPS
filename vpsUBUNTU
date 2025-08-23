@@ -11,20 +11,16 @@ fe00::  ip6-localnet
 ff00::  ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
-172.17.0.2      e91e22096dd8
 EOF
 
-# Update system and install GNOME + required packages
-# Added dbus-x11 which is critical for launching GNOME in VNC
+# Update system and install the stable MATE Desktop Environment
 echo "--- Installing packages, this may take a few minutes... ---"
 sudo apt-get update && sudo apt-get install -y \
-    ubuntu-desktop \
-    gnome-session gnome-terminal \
+    ubuntu-mate-desktop \
     novnc \
     python3-websockify \
     python3-numpy \
     tightvncserver \
-    dbus-x11 \
     htop nano neofetch \
     firefox
 
@@ -35,28 +31,21 @@ openssl req -x509 -nodes -newkey rsa:3072 \
     -subj "/C=US/ST=None/L=None/O=NoVNC/CN=localhost"
 
 # Initialize VNC config and set a password
-# Note: You will be prompted to enter a VNC password here
+# You will be prompted to enter a VNC password here
 echo "--- Initializing VNC Server, please set your password ---"
 vncserver :1
 vncserver -kill :1
 
-# Backup and create new xstartup file
+# Backup and create new xstartup file for MATE
 [ -f ~/.vnc/xstartup ] && mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
 
-# Create a new, more robust xstartup for GNOME
-# This version explicitly starts a dbus session, which is the key fix
+# Create a reliable xstartup script for the MATE desktop
 cat <<EOF > ~/.vnc/xstartup
 #!/bin/sh
 export XDG_SESSION_TYPE=x11
-export DBUS_SESSION_BUS_ADDRESS=\${DBUS_SESSION_BUS_ADDRESS}
-
-# Load system-wide X session startup script if it exists
-[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
-[ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources
-
-# Launch GNOME session with a dbus-launch wrapper
-# This ensures all GNOME components can communicate
-dbus-launch --exit-with-session gnome-session &
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+mate-session &
 EOF
 
 # Make the new xstartup script executable
@@ -65,7 +54,7 @@ chmod +x ~/.vnc/xstartup
 # Start VNC server with a common resolution
 # The -localhost flag is a security best practice
 echo "--- Starting VNC server... ---"
-vncserver -geometry 1920x1080 -localhost :1
+vncserver -geometry 1600x900 -localhost :1
 
 # Start noVNC (websockify) in the background
 echo "--- Starting noVNC service... ---"
@@ -75,5 +64,5 @@ websockify -D --web=/usr/share/novnc/ --cert=\$HOME/novnc.pem 6080 localhost:590
 neofetch
 
 # Output access info
-echo "✅ Setup complete! Access noVNC at https://${vpscode}-6080.csb.app/vnc.html"
+echo "✅ Setup complete! Access your working Ubuntu desktop at https://${vpscode}-6080.csb.app/vnc.html"
 echo "📌 VPS code '${vpscode}' has been applied to /etc/hosts."
