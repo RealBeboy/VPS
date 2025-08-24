@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+# NoMachine Ubuntu Desktop (Docker) + playit.gg tunnel (no ngrok)
+# Tested on Linux hosts with Docker installed.
+
+set -euo pipefail
+
+# ------------------ Config ------------------
+CONTAINER_NAME="nomachine-xfce4"
+IMAGE="thuonghai2711/nomachine-ubuntu-desktop:windows10"
+
+NX_PORT_HOST="${NX_PORT_HOST:-4000}"   # host port to expose
+NX_PORT_CONT="${NX_PORT_CONT:-4000}"   # container NX port (NoMachine default)
+USERNAME="${USERNAME:-user}"
+PASSWORD="${PASSWORD:-}"               # leave empty to be prompted / generated
+
+# Playit agent (pin to a known working version; update if needed)
+PLAYIT_VER="${PLAYIT_VER:-v0.15.0}"
+PLAYIT_BIN="playit-linux-amd64"
+PLAYIT_URL="https://github.com/playit-cloud/playit-agent/releases/download/${PLAYIT_VER}/${PLAYIT_BIN}"
+PLAYIT_DIR="${PLAYIT_DIR:-$HOME/.playit}"
+# --------------------------------------------
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' is required."; exit 1; }
+}
+
+echo "==> Pre-flight checks"
+require_cmd docker
+mkdir -p "$PLAYIT_DIR"
+
+# Prompt / generate password if empty
+if [[ -z "${PASSWORD}" ]]; then
+  echo -n "Set a password for NoMachine user '${USERNAME}' (leave blank to auto-generate): "
+  read -r -s input || true
+  echo
+  if [[ -z "${input:-}" ]]; then
+    if command -v openssl >/dev/null 2>&1; then
+      PASSWORD="$(openssl rand -base64 18)"
+    else
+      PASSWORD="$(head -c 24 /dev/urandom | base64 | tr -d '\n=+/[:space:]' | cut -c1-20)"
+    fi
+    echo "Generated strong password: $PASSWORD"
+  else
+    PASSWORD="$input"
+  fi
+fi
+
+# Figure out LAN IP for local connections
+get_lan_ip() {
+  if command -v ip >/dev/null 2>&1 && ip route get 1.1.1.1 >/dev/null 2>&1; then
+    ip route get 1.1.1.1 2>/dev/null | awk '/src/ {for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}'
+  else
+    hostname -I 2>/dev/null | awk '{print $1}'
+  fi
+}
+LAN_IP="$(get_lan_ip)"; LAN_IP="${LAN_IP:-127.0.0.1}"
+
+echo "==> Stopping any previous container named ${CONTAINER_NAME} (if running)"
+docker rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true
+
+echo "==> Pulling image (if needed): ${IMAGE}"
+docker pull "${IMAGE}" >/dev/null || true
+
+echo "==> Launching NoMachine desktop container (publishing ${NX_PORT_HOST}->${NX_PORT_CONT}/tcp)"
+docker run -d \
+  -p "${NX_PORT_HOST}:${NX_PORT_CONT}" \
+  --privileged \
+  --name "${CONTAINER_NAME}" \
+  -e USER="${USERNAME}" \
+  -e PASSWORD="${PASSWORD}" \
+  --cap-add=SYS_PTRACE \
+  --shm-size=1g \
+  "${IMAGE}" >/dev/null
+
+# Wait for NX service to start listening inside container,
+# then it will be reachable on the host at ${NX_PORT_HOST}
+echo "==> Waiting up to 90s for NoMachine to listen on TCP ${NX_PORT_HOST} ..."
+for i in {1..90}; do
+  sleep 1
+  if ss -ltn 2>/dev/null | awk '{print $4}' | grep -q ":${NX_PORT_HOST}$"; then
+    echo "OK: Host port ${NX_PORT_HOST} is listening."
+    break
+  fi
+  if (( i == 90 )); then
+    echo "Warning: Could not verify ${NX_PORT_HOST} is listening yet. It may still be starting."
+  fi
+done
+
+# -------- playit.gg agent setup --------
+echo "==> Downloading playit agent (${PLAYIT_VER}) to ${PLAYIT_DIR}"
+(
+  cd "$PLAYIT_DIR"
+  # Download if missing or version changed
+  if [[ ! -f "${PLAYIT_BIN}" ]]; then
+    curl -fsSL -o "${PLAYIT_BIN}" "${PLAYIT_URL}" || wget -O "${PLAYIT_BIN}" "${PLAYIT_URL}"
+    chmod +x "${PLAYIT_BIN}"
+  fi
+)
+
+echo "==> Starting playit agent (you will get a claim URL to link this machine)"
+echo "    - Keep this terminal open while you claim."
+echo "    - After claiming, create a TCP tunnel to local ${LAN_IP}:${NX_PORT_HOST} (or 127.0.0.1:${NX_PORT_HOST})."
+
+# Run agent in a new detached screen/tmux if available, otherwise background
+start_playit() {
+  if command -v tmux >/dev/null 2>&1; then
+    tmux new -d -s playit "${PLAYIT_DIR}/${PLAYIT_BIN}"
+    echo "playit agent started in tmux session 'playit'. Attach with: tmux attach -t playit"
+  elif command -v screen >/dev/null 2>&1; then
+    screen -dmS playit "${PLAYIT_DIR}/${PLAYIT_BIN}"
+    echo "playit agent started in screen session 'playit'. Attach with: screen -r playit"
+  else
+    nohup "${PLAYIT_DIR}/${PLAYIT_BIN}" >/dev/null 2>&1 &
+    echo "playit agent started in background (nohup)."
+  fi
+}
+start_playit
+
+# Final info
+cat <<EOF
+
+============================================================
+ NoMachine Desktop + playit.gg tunnel
+
+ • Local desktop:
+     User:     ${USERNAME}
+     Password: ${PASSWORD}
+     LAN IP:   ${LAN_IP}
+     NX Port:  ${NX_PORT_HOST}/tcp
+     Connect locally with NoMachine to:  ${LAN_IP}:${NX_PORT_HOST}
+
+ • playit.gg:
+     1) Watch the terminal/session for a "Claim" URL from the playit agent,
+        open it, and link this machine to your playit.gg account.
+     2) In your playit dashboard, create a TCP tunnel that points to:
+           Local Address: 127.0.0.1
+           Local Port:    ${NX_PORT_HOST}
+        (You can also use ${LAN_IP}:${NX_PORT_HOST}.)
+     3) Use the public address:port shown in the dashboard to connect
+        from outside (in the NoMachine client).
+
+Notes:
+ - NoMachine uses TCP 4000 by default for NX protocol. (${NX_PORT_CONT} in container) :contentReference[oaicite:0]{index=0}
+ - Running playit agent on Linux is just "download → chmod +x → run".
+   See playit’s Linux guide if you need details or a service that runs 24/7. :contentReference[oaicite:1]{index=1}
+
+Security:
+ - Your desktop is now reachable via playit’s public endpoint once the tunnel is enabled.
+ - Keep the password strong and consider limiting who gets the URL.
+ - Stop everything with:
+     docker rm -f ${CONTAINER_NAME}
+   And stop the agent with:
+     tmux kill-session -t playit   # or 'screen -S playit -X quit', or kill the process.
+
+Enjoy!
+
+Run this:
+docker exec -it nomachine-xfce4 bash
+curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
+sudo apt update
+sudo apt install playit
+============================================================
+EOF
