@@ -13,3 +13,9 @@ curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/vpsUB
 bash vpsUBUNTU.sh
 
 ```
+setup sftp
+```
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/setup_sftp.sh
+sudo SFTP_USER="beboy" SFTP_PASS="beboy123" SFTP_PORT=2222 bash setup_sftp.sh
+
+```
