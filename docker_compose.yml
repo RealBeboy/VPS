@@ -1,0 +1,37 @@
+version: "3.9"
+
+networks:
+  appnet: {}
+
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    ports:
+      - "3389:3389"
+    environment:
+      VERSION: "10l"
+      KVM: "N"
+      VNCPASS: "beboy123"
+      RAM_SIZE: "4G"
+      CPU_CORES: "4"
+    volumes:
+      - windows_data:/storage
+    restart: unless-stopped
+    stop_grace_period: 2m
+    networks:
+      - appnet
+
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:latest
+    container_name: playit
+    environment:
+      SECRET_KEY: "2b4c39118eeab2f35aa805916d6665364d86b27747be0a4ca96f63d87da0c937"
+    depends_on:
+      - windows
+    restart: unless-stopped
+    networks:
+      - appnet
+
+volumes:
+  windows_data: {}
