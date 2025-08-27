@@ -30,6 +30,7 @@ curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/docke
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/playit.yml
 docker compose -f docker_compose.yml up -d
 docker compose logs windows
+
 ```
 Step 2
 install play it and get the secret key run it after connecting ctrl+c
