@@ -34,8 +34,7 @@ docker compose logs windows
 ```
 Step 2
 install play it and get the secret key run it after connecting ctrl+c
-port forward tcp 8006 then wwait the installation mga 1 hour pana or 30 minutes ambot
-change the port to 3389 then done
+port forward tcp 5900 ip 172.19.0.2 or 172.18.0.2 then connec with vnc client
 ```
 curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
