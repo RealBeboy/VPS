@@ -48,3 +48,8 @@ docker compose up -d
 docker compose logs -f playit
 
 ```
+Step 3 Change to port 3389 from playit after boting to windows then
+```
+docker compose restart playit
+
+```
