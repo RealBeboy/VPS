@@ -43,8 +43,8 @@ sudo apt update
 sudo apt install playit -y
 playit
 docker compose down --remove-orphans
-docker compose up -d
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/getsecretkey.sh
 bash getsecretkey.sh
+docker compose up -d
 
 ```
