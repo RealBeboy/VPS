@@ -42,6 +42,8 @@ echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.git
 sudo apt update
 sudo apt install playit
 playit
+docker compose down --remove-orphans
+docker compose up -d
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/getsecretkey.sh
 bash getsecretkey.sh
 
