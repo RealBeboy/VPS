@@ -26,7 +26,7 @@ services:
     image: ghcr.io/playit-cloud/playit-agent:latest
     container_name: playit
     environment:
-      SECRET_KEY: "2b4c39118eeab2f35aa805916d6665364d86b27747be0a4ca96f63d87da0c937"
+      SECRET_KEY: "playitsecret key here"
     depends_on:
       - windows
     restart: unless-stopped
