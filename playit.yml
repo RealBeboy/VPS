@@ -1,0 +1,4 @@
+tunnels:
+  - name: vnc
+    proto: tcp
+    local_port: 5900
