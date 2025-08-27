@@ -23,29 +23,16 @@ windows 10
 
 Step 1
 ```
-mkdir windows
-cd windows
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/docker_compose.yml
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/docker-compose.yml
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/playit.yml
-docker compose -f docker_compose.yml up -d
-docker compose logs windows
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/step1.sh
+bash step1.sh
 
 ```
 Step 2
 install play it and get the secret key run it after connecting ctrl+c
 port forward tcp 5900 ip 172.19.0.2 or 172.18.0.2 then connec with vnc client
 ```
-curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
-echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
-sudo apt update
-sudo apt install playit -y
-playit
-docker compose down --remove-orphans
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/getsecretkey.sh
-bash getsecretkey.sh
-docker compose up -d
-docker compose logs -f playit
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/step2.sh
+bash step2.sh
 
 ```
 Step 3 Change to port 3389 from playit after boting to windows then
