@@ -46,5 +46,6 @@ docker compose down --remove-orphans
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/getsecretkey.sh
 bash getsecretkey.sh
 docker compose up -d
+docker compose logs -f playit
 
 ```
