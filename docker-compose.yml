@@ -13,8 +13,8 @@ services:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "4G"
-      CPU_CORES: "4"
+      RAM_SIZE: "12G"
+      CPU_CORES: "6"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
