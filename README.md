@@ -23,8 +23,6 @@ windows 10
 
 Step 1
 ```
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/24.py
-curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/index.html
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/step1.sh
 bash step1.sh
 
