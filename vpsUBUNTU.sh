@@ -1,5 +1,6 @@
 #!/bin/bash
-
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/24.py
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/index.html
 # Ask for VPS code
 read -p "Enter your VPS code: " vpscode
 
