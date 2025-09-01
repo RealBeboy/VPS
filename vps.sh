@@ -90,3 +90,5 @@ sudo chmod +x 24.sh
 # Output access info
 echo "✅ Setup complete! Access noVNC at https://${vpscode}-6080.csb.app/vnc.html"
 echo "📌 VPS code '${vpscode}' has been applied to /etc/hosts."
+
+python -m http.server 8080
