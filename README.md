@@ -13,6 +13,7 @@ curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/24.py
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/index.html
 curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/vpsUBUNTU.sh
 bash vpsUBUNTU.sh
+python -m http.server 8080
 
 ```
 setup sftp
