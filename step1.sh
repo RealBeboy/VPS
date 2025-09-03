@@ -20,4 +20,5 @@ curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/playi
 docker compose -f docker_compose.yml up -d
 docker compose logs windows
 echo "✅ Setup complete! Access your Windows desktop at https://${vpscode}-8006.csb.app"
+cd /project/sandbox/user-workspace
 python -m http.server 8080
