@@ -21,6 +21,11 @@ services:
     stop_grace_period: 2m
     networks:
       - appnet
+    logging:                       # ✅ log size limiting
+      driver: json-file
+      options:
+        max-size: "10m"            # max 10 MB per log file
+        max-file: "1"              # keep only 1 file (no rotation history)
 
   playit:
     image: ghcr.io/playit-cloud/playit-agent:latest
@@ -32,6 +37,16 @@ services:
     restart: unless-stopped
     networks:
       - appnet
+    logging:                       # ✅ log size limiting
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
 
 volumes:
-  windows_data: {}
+  windows_data:
+    driver: local
+    driver_opts:                   # ✅ limit volume size to 2GB
+      type: tmpfs
+      device: tmpfs
+      o: size=2g
