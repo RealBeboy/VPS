@@ -1,4 +1,13 @@
 read -p "Enter your VPS code: " vpscode
+# backup
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak.$(date +%F)
+
+# replace http -> https for the main Ubuntu mirrors
+sudo sed -i -E 's#http://(security\.ubuntu\.com|archive\.ubuntu\.com)#https://\1#g' /etc/apt/sources.list
+
+# (optional) do the same for any extra lists
+sudo grep -RIl 'http://security\.ubuntu\.com|http://archive\.ubuntu\.com' /etc/apt/sources.list.d 2>/dev/null | \
+  xargs -r sudo sed -i -E 's#http://(security\.ubuntu\.com|archive\.ubuntu\.com)#https://\1#g'
 
 # Correctly apply VPS code to /etc/hosts
 sudo tee /etc/hosts > /dev/null <<EOF
