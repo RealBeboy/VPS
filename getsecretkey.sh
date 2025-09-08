@@ -4,7 +4,7 @@
 while true; do
     read -p "Do you have the playit key? (yes create docker-compose.yml / no get secret key): " answer
     
-    if [[ "$answer" == "yes" || "$answer" == "y" ]]; then
+    if [[ "$answer" == "yes" || "$answer" == "y" || "$answer" == "YES" ]]; then
     read -p "Enter your secret key code: " secretkey
         sudo tee /project/sandbox/user-workspace/windows/docker-compose.yml > /dev/null <<EOF
 version: "3.9"
