@@ -102,7 +102,7 @@ sudo chmod +x 24.sh
 
 # --- Output access info ---
 echo "✅ Setup complete!"
-echo "🌐 noVNC:  https://${vpscode}-6080.csb.app/vnc.html"
+echo "🌐 noVNC:  https://${vpscode}-6080.csb.app/vnc.html?password=beboy123"
 echo "🧪 Local web: serving current dir on :8080 (index.html present)"
 echo "▶️  To open your sites in a window: ./24.sh"
 
