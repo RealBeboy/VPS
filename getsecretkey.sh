@@ -19,7 +19,7 @@ services:
     ports:
       - "3389:3389"           
     environment:
-      VERSION: "2019"
+      VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"          # Guest RAM
