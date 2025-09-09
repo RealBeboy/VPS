@@ -3,7 +3,7 @@ services:
     image: dockurr/windows
     container_name: windows
     environment:
-      VERSION: "2019"
+      VERSION: "10l"
       KVM: "N"          # Codesandbox: no /dev/kvm → force software emulation
     ports:
       - "8006:8006"
@@ -16,4 +16,5 @@ services:
 
 volumes:
   windows_data:
+
 
