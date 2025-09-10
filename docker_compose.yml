@@ -5,12 +5,12 @@ services:
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "15G"     # <-- limit the virtual disk to 15 GB
-      DISK_FMT: "qcow2"    # optional, sparse format (doesn't preallocate)
+      DISK_SIZE: "15G"     # limit the virtual disk to 15 GB
+      DISK_FMT: "qcow2"    # sparse (doesn't preallocate)
     ports:
-      - "8006:8006"
-      - "3389:3389/tcp"
-      - "3389:3389/udp"
+      - "127.0.0.1:8006:8006"          # web UI on localhost only
+      - "127.0.0.1:3389:3389/tcp"      # RDP TCP on localhost only
+      - "127.0.0.1:3389:3389/udp"      # RDP UDP on localhost only
     volumes:
       - windows_data:/storage
     restart: unless-stopped
