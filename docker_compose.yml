@@ -5,17 +5,17 @@ services:
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "14G"     # limit the virtual disk to 15 GB
-      DISK_FMT: "qcow2"    # sparse (doesn't preallocate)
+      DISK_SIZE: "15G"      # reserve exactly 15 GB
+      DISK_FMT: "raw"       # raw format (preallocated, not sparse)
+      DISK_PREALLOC: "Y"    # force host to allocate full size
     ports:
-      - "127.0.0.1:8006:8006"          # web UI on localhost only
-      - "127.0.0.1:3389:3389/tcp"      # RDP TCP on localhost only
-      - "127.0.0.1:3389:3389/udp"      # RDP UDP on localhost only
+      - "127.0.0.1:8006:8006"         # web UI on localhost only
+      - "127.0.0.1:3389:3389/tcp"     # RDP TCP on localhost only
+      - "127.0.0.1:3389:3389/udp"     # RDP UDP on localhost only
     volumes:
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
 
 volumes:
-  windows_data:
-
+  windows_data: {}
