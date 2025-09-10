@@ -10,11 +10,10 @@ services:
       - "3389:3389/tcp"
       - "3389:3389/udp"
     volumes:
-      - windows_data:/storage
+      - type: tmpfs
+        target: /storage
+        tmpfs:
+          size: 8g      # limit RAM usage to 8 GB
     restart: unless-stopped
     stop_grace_period: 2m
-
-volumes:
-  windows_data:
-
 
