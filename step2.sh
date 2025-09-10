@@ -9,3 +9,5 @@ curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/getse
 bash getsecretkey.sh
 docker compose up -d
 docker compose logs -f playit
+docker compose up -d
+docker compose logs -f playit
