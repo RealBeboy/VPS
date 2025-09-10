@@ -5,7 +5,7 @@ services:
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "15G"      # reserve exactly 15 GB
+      DISK_SIZE: "14G"      # reserve exactly 15 GB
       DISK_FMT: "raw"       # raw format (preallocated, not sparse)
       DISK_PREALLOC: "Y"    # force host to allocate full size
     ports:
@@ -19,3 +19,4 @@ services:
 
 volumes:
   windows_data: {}
+
