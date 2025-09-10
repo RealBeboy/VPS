@@ -24,12 +24,15 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
-      DISK_SIZE: "8G"
+      DISK_SIZE: "14G"
+      # These two lines force pre-allocation on the host disk
+      DISK_FMT: "raw"
+      DISK_PREALLOC: "Y"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
-    networks: [appnet]  # The windows container still needs to create/join the network
+    networks: [appnet]
     logging:
       driver: json-file
       options:
@@ -41,7 +44,7 @@ services:
     container_name: playit
     environment:
       SECRET_KEY: "${secretkey}"
-    network_mode: "service:windows" # This tells playit to use the windows container's network
+    network_mode: "service:windows"
     depends_on:
       - windows
     restart: unless-stopped
@@ -52,12 +55,9 @@ services:
         max-file: "1"
 
 volumes:
-  windows_data:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: size=8g,uid=0,gid=0,mode=0755
+  # This now defines a standard, persistent volume on the disk
+  windows_data: {}
+
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
