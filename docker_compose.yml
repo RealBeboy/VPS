@@ -1,17 +1,19 @@
+version: "3.9"
+
 services:
   windows:
     image: dockurr/windows
-    container_name: windows
+    container_name: windows # This name is crucial for the playit container to find it
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "14G"      # reserve exactly 15 GB
-      DISK_FMT: "raw"       # raw format (preallocated, not sparse)
-      DISK_PREALLOC: "Y"    # force host to allocate full size
+      DISK_SIZE: "14G"
+      DISK_FMT: "raw"
+      DISK_PREALLOC: "Y"
     ports:
-      - "127.0.0.1:8006:8006"         # web UI on localhost only
-      - "127.0.0.1:3389:3389/tcp"     # RDP TCP on localhost only
-      - "127.0.0.1:3389:3389/udp"     # RDP UDP on localhost only
+      - "127.0.0.1:8006:8006"
+      - "127.0.0.1:3389:3389/tcp"
+      - "127.0.0.1:3389:3389/udp"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
@@ -19,4 +21,3 @@ services:
 
 volumes:
   windows_data: {}
-
