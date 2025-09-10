@@ -5,7 +5,7 @@ services:
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "15G"     # limit the virtual disk to 15 GB
+      DISK_SIZE: "14G"     # limit the virtual disk to 15 GB
       DISK_FMT: "qcow2"    # sparse (doesn't preallocate)
     ports:
       - "127.0.0.1:8006:8006"          # web UI on localhost only
@@ -18,3 +18,4 @@ services:
 
 volumes:
   windows_data:
+
