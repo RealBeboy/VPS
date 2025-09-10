@@ -10,6 +10,8 @@ services:
       DISK_SIZE: "14G"
       DISK_FMT: "raw"
       DISK_PREALLOC: "Y"
+      USERNAME: "BeboyRDP"
+      PASSWORD: "beboy123"
     ports:
       - "127.0.0.1:8006:8006"
       - "127.0.0.1:3389:3389/tcp"
@@ -21,3 +23,4 @@ services:
 
 volumes:
   windows_data: {}
+
