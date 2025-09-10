@@ -9,33 +9,41 @@ while true; do
         sudo tee /project/sandbox/user-workspace/windows/docker-compose.yml > /dev/null <<EOF
 version: "3.9"
 
+networks:
+  appnet: {}
+
 services:
   windows:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "127.0.0.1:3389:3389"   # bind ONLY to host localhost
+      - "3389:3389"
     environment:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
-      DISK_SIZE: "14G"
-      DISK_FMT: "raw"
-      DISK_PREALLOC: "Y"
+      DISK_SIZE: "8G"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
+    networks: [appnet]  # The windows container still needs to create/join the network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
 
   playit:
     image: ghcr.io/playit-cloud/playit-agent:latest
     container_name: playit
     environment:
       SECRET_KEY: "${secretkey}"
-    # Crucial: use host network so 127.0.0.1 = host
-    network_mode: "host"
+    network_mode: "service:windows" # This tells playit to use the windows container's network
+    depends_on:
+      - windows
     restart: unless-stopped
     logging:
       driver: json-file
@@ -44,8 +52,12 @@ services:
         max-file: "1"
 
 volumes:
-  windows_data: {}
-
+  windows_data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=8g,uid=0,gid=0,mode=0755
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
