@@ -28,6 +28,8 @@ services:
       # These two lines force pre-allocation on the host disk
       DISK_FMT: "raw"
       DISK_PREALLOC: "Y"
+      USERNAME: "BeboyRDP"
+      PASSWORD: "beboy123"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
