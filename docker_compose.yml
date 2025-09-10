@@ -5,17 +5,16 @@ services:
     environment:
       VERSION: "10l"
       KVM: "N"
-      DISK_SIZE: "8G" # Codesandbox: no /dev/kvm → force software emulation
+      DISK_SIZE: "15G"     # <-- limit the virtual disk to 15 GB
+      DISK_FMT: "qcow2"    # optional, sparse format (doesn't preallocate)
     ports:
       - "8006:8006"
       - "3389:3389/tcp"
       - "3389:3389/udp"
     volumes:
-      - type: tmpfs
-        target: /storage
-        tmpfs:
-          size: 8g      # limit RAM usage to 8 GB
+      - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
 
-
+volumes:
+  windows_data:
