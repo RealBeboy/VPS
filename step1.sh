@@ -10,6 +10,12 @@ sudo grep -RIl 'http://security\.ubuntu\.com|http://archive\.ubuntu\.com' /etc/a
   xargs -r sudo sed -i -E 's#http://(security\.ubuntu\.com|archive\.ubuntu\.com)#https://\1#g'
 
 # Correctly apply VPS code to /etc/hosts
+sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+{
+  "dns": ["8.8.8.8", "1.1.1.1"]
+}
+EOF
+
 sudo tee /etc/hosts > /dev/null <<EOF
 127.0.0.1       localhost ${vpscode}
 ::1     localhost ip6-localhost ip6-loopback
