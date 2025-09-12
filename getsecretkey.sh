@@ -19,10 +19,7 @@ services:
     ports:
       - "3389:3389"
     environment:
-      # This tells the Windows VM inside the container to use 6GB of RAM.
       RAM_SIZE: "6G"
-      
-      # Other VM settings
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
@@ -36,18 +33,13 @@ services:
     deploy:
       resources:
         limits:
-          # The container can use up to 8GB of physical RAM...
           memory: 8G
-          # ...and a total of 12GB (8GB RAM + 4GB Swap) before being killed.
-          memory_swap: 12G
-          
+
     volumes:
       - windows_data:/storage
     restart: unless-stopped
-    # Gives the Windows OS 2 minutes to shut down gracefully.
     stop_grace_period: 2m
     networks: [appnet]
-    # Prevents log files from growing indefinitely and filling the disk.
     logging:
       driver: json-file
       options:
@@ -58,10 +50,7 @@ services:
     image: ghcr.io/playit-cloud/playit-agent:latest
     container_name: playit
     environment:
-      # Make sure you have a .env file in the same directory
-      # with the line: secretkey=YOUR_ACTUAL_SECRET_KEY
       SECRET_KEY: "${secretkey}"
-    # Shares the network of the 'windows' service.
     network_mode: "service:windows"
     depends_on:
       - windows
@@ -73,7 +62,6 @@ services:
         max-file: "1"
 
 volumes:
-  # Defines the persistent volume for the Windows virtual disk.
   windows_data: {}
 
 EOF
