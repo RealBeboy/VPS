@@ -16,6 +16,9 @@ services:
   windows:
     image: dockurr/windows
     container_name: windows
+    dns: # <-- THE FIX IS ADDED HERE
+      - 1.1.1.1
+      - 8.8.8.8
     ports:
       - "3389:3389"
     environment:
@@ -59,6 +62,7 @@ services:
 volumes:
   # This now defines a standard, persistent volume on the disk
   windows_data: {}
+
 
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
