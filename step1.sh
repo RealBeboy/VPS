@@ -1,5 +1,5 @@
 read -p "Enter your VPS code: " vpscode
-# backup
+docker system prune -a --volumes
 sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak.$(date +%F)
 
 # replace http -> https for the main Ubuntu mirrors
