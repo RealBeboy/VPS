@@ -17,16 +17,14 @@ services:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "3389:3389"
+      - "3389:3389"           
     environment:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "6G"
-      CPU_CORES: "6"
-      DISK_SIZE: "14G"
-      USERNAME: "BeboyRDP"
-      PASSWORD: "beboy123"
+      RAM_SIZE: "6G"          # Guest RAM
+      CPU_CORES: "6"          # Guest vCPUs
+      DISK_SIZE: "8G"         # Matches tmpfs size
     volumes:
       - windows_data:/storage
     restart: unless-stopped
@@ -46,6 +44,7 @@ services:
     depends_on:
       - windows
     restart: unless-stopped
+    networks: [appnet]
     logging:
       driver: json-file
       options:
@@ -53,7 +52,12 @@ services:
         max-file: "1"
 
 volumes:
-  windows_data: {}
+  windows_data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=8g,uid=0,gid=0,mode=0755
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
