@@ -31,7 +31,6 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
-      DISK_SIZE: "14G"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
