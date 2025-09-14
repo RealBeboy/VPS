@@ -25,7 +25,7 @@ services:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "3389:3389"        # RDP
+      - "3389:3389"       # RDP
       - "5900:5900"  
     environment:
       VERSION: "10l"
@@ -33,6 +33,8 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
+      DISK_SIZE: "14G"
+      DISK_FMT: "raw"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
@@ -52,7 +54,6 @@ services:
     restart: unless-stopped
     networks:
       - appnet
-
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
