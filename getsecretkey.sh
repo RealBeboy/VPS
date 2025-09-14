@@ -12,13 +12,9 @@ version: "3.9"
 networks:
   appnet: {}
 
+# This volume will now be persistent and stored on your disk.
 volumes:
-  windows_data:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: size=14g,uid=0,gid=0,mode=0755
+  windows_data: {}
 
 services:
   windows:
@@ -26,18 +22,20 @@ services:
     container_name: windows
     ports:
       - "3389:3389"       # RDP
-      - "5900:5900"  
+      - "5900:5900"
+      - "8006:8006"
     environment:
+      # This tells the container to create a 14GB virtual disk.
+      DISK_SIZE: "14G"
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
-      DISK_SIZE: "14G"
-      DISK_FMT: "raw"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
+      # This links the container's storage to the persistent volume.
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
@@ -54,6 +52,8 @@ services:
     restart: unless-stopped
     networks:
       - appnet
+
+
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
