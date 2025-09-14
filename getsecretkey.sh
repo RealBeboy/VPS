@@ -25,9 +25,6 @@ services:
       RAM_SIZE: "8G"
       CPU_CORES: "6"
       DISK_SIZE: "14G"
-      # These two lines force pre-allocation on the host disk
-      DISK_FMT: "raw"
-      DISK_PREALLOC: "Y"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
@@ -57,7 +54,6 @@ services:
         max-file: "1"
 
 volumes:
-  # This now defines a standard, persistent volume on the disk
   windows_data: {}
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
