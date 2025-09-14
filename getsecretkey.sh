@@ -21,7 +21,7 @@ services:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "3389:3389"       # RDP
+      - "3389:3389"      # RDP
       - "5900:5900"
       - "8006:8006"
     environment:
@@ -31,7 +31,7 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
-	  DISK_SIZE: "14G"
+      DISK_SIZE: "14G"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
@@ -52,7 +52,6 @@ services:
     restart: unless-stopped
     networks:
       - appnet
-
 
 
 EOF
