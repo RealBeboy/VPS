@@ -1,4 +1,4 @@
-docker system prune -a --volumes
+
 cd /project/sandbox/user-workspace/windows
 docker compose down --remove-orphans
 curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
