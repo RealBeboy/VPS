@@ -33,6 +33,8 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
+      USERNAME: "BeboyRDP"
+      PASSWORD: "beboy123"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
