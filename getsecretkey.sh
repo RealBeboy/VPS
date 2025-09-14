@@ -43,7 +43,6 @@ services:
     container_name: playit
     environment:
       SECRET_KEY: "${secretkey}"
-    network_mode: "service:windows"
     depends_on:
       - windows
     restart: unless-stopped
