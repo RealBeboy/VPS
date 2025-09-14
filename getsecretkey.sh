@@ -32,8 +32,6 @@ services:
       RAM_SIZE: "6G"
       CPU_CORES: "6"
 	  DISK_SIZE: "14G"
-	  DISK_FMT: "raw"
-	  DISK_PREALLOC: "Y"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
