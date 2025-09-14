@@ -17,14 +17,15 @@ services:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "3389:3389"           
+      - "3389:3389"
     environment:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "6G"          # Guest RAM
-      CPU_CORES: "6"          # Guest vCPUs
-      DISK_SIZE: "8G"         # Matches tmpfs size
+      RAM_SIZE: "6G"        # Guest RAM
+      CPU_CORES: "6"        # Guest vCPUs
+      DISK_SIZE: "14G"      # Virtual disk size on VPS storage
+      DISK_FMT: "raw"       # Use raw disk format instead of qcow2
     volumes:
       - windows_data:/storage
     restart: unless-stopped
@@ -52,12 +53,7 @@ services:
         max-file: "1"
 
 volumes:
-  windows_data:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: size=8g,uid=0,gid=0,mode=0755
+  windows_data: {}
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
