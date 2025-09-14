@@ -8,6 +8,9 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
       CPU_CORES: "6"
+      DISK_SIZE: "14G"
+      DISK_FMT: "raw"
+      DISK_PREALLOC: "Y"
     ports:
       - "8006:8006"
       - "3389:3389/tcp"
@@ -19,4 +22,5 @@ services:
 
 volumes:
   windows_data: {}
+
 
