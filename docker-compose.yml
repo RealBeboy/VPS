@@ -32,20 +32,18 @@ services:
         max-size: "10m"
         max-file: "1"
 
-  playit:
-    image: ghcr.io/playit-cloud/playit-agent:latest
-    container_name: playit
-    environment:
-      SECRET_KEY: "${secretkey}"
-    network_mode: "service:windows"
-    depends_on:
-      - windows
-    restart: unless-stopped
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "1"
+playit:
+  image: ghcr.io/playit-cloud/playit-agent:latest
+  container_name: playit
+  environment:
+    SECRET_KEY: "${secretkey}"
+  network_mode: "service:windows"
+  depends_on:
+    - windows
+  restart: unless-stopped
+  logging:
+    driver: "none"
+
 
 volumes:
   # This now defines a standard, persistent volume on the disk
