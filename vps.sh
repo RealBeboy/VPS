@@ -94,11 +94,11 @@ GEOMETRY2="0,640,0,640,360"
 
 # -- Window 3 (Bottom-Left) --
 URL3="https://agent.blackbox.ai/?sandbox=${site2}"
-GEOMETRY3="0,0,360,640,360"
+GEOMETRY3="0,0,0,0,360"
 
 # -- Window 4 (Bottom-Right) --
 URL4="https://${site2}-8080.csb.app/"
-GEOMETRY4="0,640,360,640,360"
+GEOMETRY4="0,0,0,640,360"
 
 
 # --- Script Logic ---
