@@ -12,28 +12,33 @@ version: "3.9"
 networks:
   appnet: {}
 
+volumes:
+  windows_data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=14g,uid=0,gid=0,mode=0755
+
 services:
   windows:
     image: dockurr/windows
     container_name: windows
     ports:
-      - "3389:3389"
+      - "3389:3389"        # RDP
+      - "5900:5900"  
     environment:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "6G"        # Guest RAM
-      CPU_CORES: "6"        # Guest vCPUs
+      RAM_SIZE: "6G"
+      CPU_CORES: "6"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
-    networks: [appnet]
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "1"
+    networks:
+      - appnet
 
   playit:
     image: ghcr.io/playit-cloud/playit-agent:latest
@@ -43,20 +48,9 @@ services:
     depends_on:
       - windows
     restart: unless-stopped
-    networks: [appnet]
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "1"
+    networks:
+      - appnet
 
-volumes:
-  windows_data:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: size=14g,uid=0,gid=0,mode=0755
 EOF
         echo "✅ docker-compose.yml created at /project/sandbox/user-workspace/windows/"
         break
