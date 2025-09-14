@@ -24,7 +24,6 @@ services:
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"        # Guest RAM
       CPU_CORES: "6"        # Guest vCPUs
-      DISK_SIZE: "14G"      # Matches tmpfs size
     volumes:
       - windows_data:/storage
     restart: unless-stopped
