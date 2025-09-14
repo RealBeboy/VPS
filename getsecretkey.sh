@@ -22,7 +22,7 @@ services:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "8G"
+      RAM_SIZE: "6G"
       CPU_CORES: "6"
       DISK_SIZE: "14G"
       USERNAME: "BeboyRDP"
