@@ -1,26 +1,18 @@
-version: "3.9"
-
 services:
   windows:
     image: dockurr/windows
-    container_name: windows # This name is crucial for the playit container to find it
+    container_name: windows
     environment:
       VERSION: "10l"
-      KVM: "N"
-      DISK_SIZE: "14G"
-      DISK_FMT: "raw"
-      DISK_PREALLOC: "Y"
-      USERNAME: "BeboyRDP"
-      PASSWORD: "beboy123"
+      KVM: "N"          # Codesandbox: no /dev/kvm → force software emulation
     ports:
-      - "127.0.0.1:8006:8006"
-      - "127.0.0.1:3389:3389/tcp"
-      - "127.0.0.1:3389:3389/udp"
+      - "8006:8006"
+      - "3389:3389/tcp"
+      - "3389:3389/udp"
     volumes:
       - windows_data:/storage
     restart: unless-stopped
     stop_grace_period: 2m
 
 volumes:
-  windows_data: {}
-
+  windows_data:
