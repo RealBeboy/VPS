@@ -25,7 +25,6 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      # This tells the container to create a 14GB virtual disk.
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
