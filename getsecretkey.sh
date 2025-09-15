@@ -25,7 +25,7 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      VERSION: "https://archive.org/download/windows-10-tiny-b-4-x-64/Windows%2010%20%28Tiny%29.iso"
+      VERSION: "8e"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
