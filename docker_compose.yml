@@ -3,7 +3,7 @@ services:
     image: dockurr/windows
     container_name: windows
     environment:
-      VERSION: "https://archive.org/download/windows-10-tiny-b-4-x-64/Windows%2010%20%28Tiny%29.iso"
+      VERSION: "8e"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
@@ -19,6 +19,7 @@ services:
 
 volumes:
   windows_data: {}
+
 
 
 
