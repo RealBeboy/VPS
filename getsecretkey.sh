@@ -25,7 +25,7 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      VERSION: "10l"
+      VERSION: "https://archive.org/download/tiny-10-NTDEV/Tiny10%20B4%20x64.iso"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
