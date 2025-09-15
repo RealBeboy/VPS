@@ -75,72 +75,43 @@ neofetch
 sudo tee 24.sh > /dev/null <<EOF
 #!/bin/bash
 
-# This script opens multiple Firefox windows and positions them in a 2x2 grid
-# optimized for a 1280x720 display.
-# It requires 'wmctrl' to be installed.
+# This script opens multiple Firefox windows, each with a size of 640x360.
+# It uses Firefox's native command-line arguments.
 
 # --- Configuration ---
-# Geometry is defined for a 1280x720 screen, splitting it into four quadrants.
-# Each window will be 640px wide and 360px tall.
-# The format for GEOMETRY is: gravity,x_position,y_position,width,height
-
-# -- Window 1 (Top-Left) --
+# URLs are set by the parent script that generated this file.
 URL1="https://agent.blackbox.ai/?sandbox=${site1}"
-GEOMETRY1="0,0,0,640,360"
-
-# -- Window 2 (Top-Right) --
 URL2="https://${site1}-8080.csb.app/"
-GEOMETRY2="0,640,0,640,360"
-
-# -- Window 3 (Bottom-Left) --
 URL3="https://agent.blackbox.ai/?sandbox=${site2}"
-GEOMETRY3="0,0,0,0,360"
-
-# -- Window 4 (Bottom-Right) --
 URL4="https://${site2}-8080.csb.app/"
-GEOMETRY4="0,0,0,640,360"
 
+# Window dimensions
+WIDTH=640
+HEIGHT=360
 
 # --- Script Logic ---
-# A helper function to launch a URL in a new window and then position it.
-# It works by targeting the most recently created Firefox window.
-launch_and_position() {
+# A helper function to launch a URL in a new window with a specified size.
+launch_window() {
   local url="\$1"
-  local geometry="\$2"
-  # This targets a generic Firefox window. The sleep command helps ensure we get the newest one.
-  local window_title="Mozilla Firefox"
+  echo "Opening \$url in a new \${WIDTH}x\${HEIGHT} window..."
 
-  echo "Opening \$url in a new window..."
-  # Open the URL in a new window and send the process to the background
-  firefox --new-window "\$url" &
-
-  # Give the browser a moment to create the window before we try to manage it.
-  sleep 2
-
-  echo "Positioning window for \$url..."
-  # Loop for a few seconds, repeatedly trying to position the new window.
-  for i in {1..10}; do
-    # -r: Selects a window by its name. wmctrl will act on the topmost one.
-    # -e: Specifies the new geometry (gravity,x,y,width,height).
-    if wmctrl -r "\$window_title" -e "\$geometry" 2>/dev/null; then
-      echo "Window positioned successfully."
-      break # Exit the loop on success
-    fi
-
-    # If it fails on the last attempt, print a warning.
-    if [ "\$i" -eq 10 ]; then
-      echo "Warning: Could not position the window for \$url."
-    fi
-    sleep 0.5 # Wait before retrying
-  done
+  # --new-window: Opens the URL in a new Firefox window.
+  # --width: Sets the initial width of the window.
+  # --height: Sets the initial height of the window.
+  # &: Runs the command in the background so the script can continue.
+  firefox --new-window "\$url" --width "\$WIDTH" --height "\$HEIGHT" &
 }
 
 # --- Execution ---
-# Launch and position each configured window sequentially.
-launch_and_position "\$URL1" "\$GEOMETRY1"
-launch_and_position "\$URL2" "\$GEOMETRY2"
-launch_and_position "\$URL3" "\$GEOMETRY3"
-launch_and_position "\$URL4" "\$GEOMETRY4"
+# Launch each configured window sequentially.
+# A small delay is added between launches to ensure they open reliably.
+launch_window "\$URL1"
+sleep 1
+launch_window "\$URL2"
+sleep 1
+launch_window "\$URL3"
+sleep 1
+launch_window "\$URL4"
 
 echo "Script finished."
 EOF
