@@ -25,7 +25,7 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      VERSION: "https://archive.org/download/tiny-10-NTDEV/Tiny10%20B4%20x64.iso"
+      VERSION: "https://archive.org/download/windows-10-lite-edition-19h2-x64/Windows%2010%20Lite%20Edition%2019H2%20x64.iso"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
