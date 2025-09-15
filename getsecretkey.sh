@@ -25,7 +25,7 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      VERSION: "https://archive.org/download/microsoft-windows-10-ltsc-17763.107.101029-1455.rs-5-release-svc-refresh-client-/Microsoft_windows_10_LTSC_17763.107.101029-1455.rs5_release_svc_refresh_CLIENT_LTSC_EVAL_x64FRE_en-us.iso"
+      VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
       RAM_SIZE: "6G"
