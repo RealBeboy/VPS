@@ -25,11 +25,11 @@ services:
       - "5900:5900"
       - "8006:8006"
     environment:
-      VERSION: "10l"
+      VERSION: "8e"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "12G"
-      CPU_CORES: "8"
+      RAM_SIZE: "6G"
+      CPU_CORES: "6"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
