@@ -28,8 +28,8 @@ services:
       VERSION: "10l"
       KVM: "N"
       VNCPASS: "beboy123"
-      RAM_SIZE: "6G"
-      CPU_CORES: "6"
+      RAM_SIZE: "12G"
+      CPU_CORES: "8"
       USERNAME: "BeboyRDP"
       PASSWORD: "beboy123"
     volumes:
