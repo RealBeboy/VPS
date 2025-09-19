@@ -68,6 +68,7 @@ EOF
         echo "  cd /project/sandbox/user-workspace/windows && docker compose up -d"
         echo "Get the TCP address:"
         echo "  docker logs -f ngrok   # look for vnc5900 -> tcp://0.tcp.ngrok.io:xxxxx"
+        echo "  done"
         break
     else
         echo "➡️  Get your ngrok authtoken: https://dashboard.ngrok.com/get-started/your-authtoken"
