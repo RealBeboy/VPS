@@ -3,7 +3,8 @@
 # Tested on Linux hosts with Docker installed.
 
 set -euo pipefail
-
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/24.py
+curl -s -O https://raw.githubusercontent.com/RealBeboy/VPS/refs/heads/main/index.html
 # ------------------ Config ------------------
 CONTAINER_NAME="nomachine-xfce4"
 IMAGE="thuonghai2711/nomachine-ubuntu-desktop:windows10"
